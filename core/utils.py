@@ -1,7 +1,7 @@
 import json
 import requests
 from rest_framework.response import Response
-
+from users.models import Profile
 
 TORRE_ROOT_URL = "https://search.torre.co/people/_search"
 
@@ -9,17 +9,15 @@ TORRE_SEARCH_PERSON_URL = TORRE_ROOT_URL
 
 HEADERS = {'Content-Type': 'application/json'}
 
-LANGUAGES = [
-    ("ESP","Spanish"),
-    ("ENG","English"),
-    ("GER","German"),
-    ("FRC","French"),
-    ("CHI","Chinese"),
-    ("ITA","Italian"),
-    ("JAP","Japanese"),
-    ("ARB","Arabic"),
-]
-
+def get_profile_by_id(id):
+    try:
+        if type(id) == int:
+            profile = Profile.objects.get(id=id)
+            return profile
+        else:
+            return None    
+    except:
+        return None
 
 def url_builder(size,lang,aggregate):
     """

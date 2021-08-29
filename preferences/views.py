@@ -1,7 +1,7 @@
 import json
 from rest_framework.views import APIView
 from users.models import *
-from core.utils import accepted_response, failed_response
+from core.utils import accepted_response, failed_response, get_profile_by_id
 
 class SetLanguage(APIView):
     def post(self,request,*arg,**kwargs):
@@ -33,10 +33,18 @@ class GetPreferences(APIView):
 
 
 class SetPreference(APIView):
+    """
+        @param id
+        @param preference
+    """
     def post(self,request,*arg,**kwargs):
         try:
             # Return the id,name
-            return accepted_response(json.dumps({1,"Java"}))
+            profile = get_profile_by_id(int(request.GET["id"]))
+            interest_name = request.POST.get("preference")
+            interest = Interest.objects.create(name=interest_name)
+        
+            return accepted_response(json.dumps({interest.id:interest.name}))
         except:
             return failed_response("Error adding the preference")
 
