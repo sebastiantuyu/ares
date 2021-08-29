@@ -1,3 +1,4 @@
+from core.models import LANGUAGES
 import json
 import requests
 from rest_framework.response import Response
@@ -65,14 +66,12 @@ def search_common_interests(interest,size,lang):
         as the user
     """
     data = []
-    data
-    print("inte",interest)
     for i in interest:
         payload = json.dumps({
             "and":
                 [{
                     "skill/role":{
-                                "text":"django",
+                                "text":interest,
                                 "experience":"1-plus-year"
                                 }}]
         })
@@ -90,6 +89,15 @@ def search_common_interests(interest,size,lang):
                         })
     return data
 
+
+def is_lang_valid(lang):
+    try:
+        for l in LANGUAGES:
+            if l[0].lower() == lang.lower():
+                return True
+        return False
+    except:
+        raise SyntaxError("The language given is not correct")
 
 
 

@@ -2,9 +2,11 @@ from django.urls import path
 from .views import *
 
 urlpatterns = [
+    path('set/',SetPreference.as_view()),
+    path('delete/',DeletePreference.as_view()),
     path('get-all/',GetPreferences.as_view()),
-    path('set-lang/',SetLanguage.as_view()),
-    path('delete-lang/',DeleteLanguage.as_view()),
-    path('set-preference/',SetPreference.as_view()),
-    path('delete-preference/',DeleteLanguage.as_view()),
+    path('lang/all/',AllLanguages.as_view()),
+    path('lang/set/',SetLanguage.as_view()),
+    path('lang/delete/',DeleteLanguage.as_view()),
+    path('lang/update/',UpdateLanguageLevel.as_view()),
 ]
