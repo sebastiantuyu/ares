@@ -25,7 +25,7 @@ SECRET_KEY = 'hjck!bm!s(hthr-nyjv+#(%awuf14ndand0ak0_)t!j63fq-c#'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['http://torrenv.eba-wrqnd2pm.us-west-2.elasticbeanstalk.com/']
+ALLOWED_HOSTS = ['https://torre-backend-demo.herokuapp.com/']
 
 
 CORS_ORIGIN_WHITELIST = [
