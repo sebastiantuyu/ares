@@ -25,11 +25,11 @@ SECRET_KEY = 'hjck!bm!s(hthr-nyjv+#(%awuf14ndand0ak0_)t!j63fq-c#'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['https://torre-backend-demo.herokuapp.com/']
+ALLOWED_HOSTS = ['https://torre-backend-demo.herokuapp.com']
 
 
 CORS_ORIGIN_WHITELIST = [
-    'https://main.d6k1o9ez8ie1p.amplifyapp.com/',
+    'https://main.d6k1o9ez8ie1p.amplifyapp.com',
 ]
 
 # Application definition
