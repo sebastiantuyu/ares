@@ -5,7 +5,7 @@ from rest_framework.authtoken.models import Token
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from django.contrib.auth.models import User
-from core.utils import accepted_response, check_torre_user,failed_response, search_common_interests
+from core.utils import accepted_response, check_torre_user,failed_response, get_profile_by_id, search_common_interests
 
 class LogIn(APIView):
 
@@ -15,7 +15,7 @@ class LogIn(APIView):
         """
         pass
 
-class LogInAsGuesst(APIView):
+class LogInAsGuest(APIView):
 
     def post(self,request,*args,**kwargs):
         """
@@ -90,25 +90,41 @@ class SetMatch(APIView):
             profile = Profile.objects.get(id=user_)
             profile.matches.add(user)
 
-            return accepted_response(json.dumps({"id":user.id}))
+            return accepted_response(json.dumps({"username":username,
+                                                 "name":name,
+                                                 "image":image_url}))
         except:
             return failed_response("Problem adding match")
+
+class GetMatches(APIView):
+
+    def get(self,request,*args,**kwargs):
+        profile = get_profile_by_id(int(request.GET["id"])) 
+        matches = []
+        for m in profile.matches.all():
+            matches.append({"name":m.full_name,
+                            "username":m.username,
+                            "image":m.image_url})
+
+        return accepted_response(json.dumps(matches))
+
 
 
 class GetCoincidences(APIView):
     
     def post(self,request,*args,**kwargs):
         try:            
-            id_ = request.GET["id"]
-            size = request.GET["size"]
+            id_ = int(request.GET["id"])
             
             profile = Profile.objects.get(id=id_)
-            search_pref = request.POST.get("preferences")
-            if not bool(size):
-                # If any size is give, use 3 by default
-                size = 1
-    
-            data = search_common_interests(json.loads(search_pref),size,'es')
+            search_pref = []
+            
+
+            for interest in profile.interests.all():
+                search_pref.append(interest.name)
+
+            # By default size is 5
+            data = search_common_interests(search_pref,3,'es')
             
             # Avoid showing users already matched !
             # only filter if user has matches

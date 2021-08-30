@@ -6,6 +6,8 @@ from users.models import Profile
 
 TORRE_ROOT_URL = "https://search.torre.co/people/_search"
 
+BIOS_URL = "https://torre.bio/api/bios/"
+
 TORRE_SEARCH_PERSON_URL = TORRE_ROOT_URL 
 
 HEADERS = {'Content-Type': 'application/json'}
@@ -26,7 +28,8 @@ def url_builder(size,lang,aggregate):
         @notice by default aggregate always False
     """
     if aggregate == False:
-        query = "?size={}&lang={}&aggregate{}".format(size,lang,"false")
+        query = "?size={}&lang={}&aggregate={}".format(size,lang,"true")
+        print(TORRE_SEARCH_PERSON_URL + query)
     return TORRE_SEARCH_PERSON_URL + query
 
 
@@ -66,28 +69,44 @@ def search_common_interests(interest,size,lang):
         as the user
     """
     data = []
+
+    print(interest,size,lang)
     for i in interest:
+        print(i)
         payload = json.dumps({
             "and":
-                [{
-                    "skill/role":{
-                                "text":interest,
-                                "experience":"1-plus-year"
-                                }}]
+                [
+                {"skill/role": {"text":i,"experience":"1-plus-year"}}
+                ]
         })
+
         response = requests.request('POST',
                                 url_builder(size,lang,False),
                                 headers=HEADERS,
                                 data=payload)
         
-        for result in json.loads(response.text)['results']:
-            data.append({
-                        'name':result['name'],
-                        'username':result['username'],
-                        'image':result['image'],
-                        'skills':result['skills']
-                        })
+        if response.status_code == 200:
+            for result in json.loads(response.text)['results']:
+                langs = get_meta_data(result['username'])
+                data.append({
+                            'username':result['username'],
+                            'name':result['name'],
+                            'description':result['professionalHeadline'],
+                            'image':result['picture'],
+                            'skills':result['skills'],
+                            'langs':langs
+                            })
+        else:
+            print("Error:::",response.content)
+            return None
     return data
+
+
+def get_meta_data(username):
+    response = requests.request('GET',
+                                BIOS_URL+username)
+    data =  json.loads(response.text)
+    return data['languages']
 
 
 def is_lang_valid(lang):

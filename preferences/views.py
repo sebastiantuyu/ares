@@ -22,7 +22,14 @@ class SetLanguage(APIView):
                 lang_ = Languages.objects.create(name=lang,
                                                 level=level)
                 profile.languages.add(lang_)
-                return accepted_response(json.dumps({lang_.id:lang_.name,"level":lang_.level}))
+
+                # Return formated language
+                source = dict(LANGUAGES)
+                return accepted_response(json.dumps({"name":source[lang_.name.upper()],
+                                                     "value":lang_.name,
+                                                     "level":lang_.level,
+                                                     "id":lang_.id,
+                                                     }))
             else:
                 return failed_response("Level provided is not under 100")
         except:
@@ -65,16 +72,25 @@ class AllLanguages(APIView):
 class GetPreferences(APIView):
     def get(self,request,*args,**kwargs):
         try:
+            source = dict(LANGUAGES)
+
             profile = get_profile_by_id(int(request.GET["id"]))
             languages = []
             interests = []
+
             for e in profile.interests.all():
-                interests.append({e.id:e.name})
+                interests.append({"name":e.name,"id":e.id})
+            
             for l in profile.languages.all():
-                languages.append({l.id:l.name,"level":l.level})
+                languages.append({  "name":source[l.name.upper()],
+                                    "value":l.name,
+                                    "level":l.level,
+                                    "id":l.id
+                                    })
             return accepted_response(json.dumps({
                                                 "interests":interests,
-                                                "languages":languages}))
+                                                "languages":languages,
+                                                }))
         except:
             return failed_response("Not found preferences")
 
@@ -93,7 +109,8 @@ class SetPreference(APIView):
 
             #Added to the profile 
             profile.interests.add(interest)
-            return accepted_response(json.dumps({interest.id:interest.name}))
+            return accepted_response(json.dumps({"name":interest.name,
+                                                 "id":interest.id}))
         except:
             return failed_response("Error adding the preference")
 

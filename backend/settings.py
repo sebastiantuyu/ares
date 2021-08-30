@@ -25,8 +25,11 @@ SECRET_KEY = 'hjck!bm!s(hthr-nyjv+#(%awuf14ndand0ak0_)t!j63fq-c#'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
+CORS_ORIGIN_WHITELIST = [
+    'http://localhost:3000',
+]
 
 # Application definition
 
@@ -37,7 +40,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
+    'rest_framework',
+    'rest_framework.authtoken',
+    'corsheaders',
     # LOCAL 
     'core',
     'preferences',
@@ -45,6 +50,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -104,7 +110,17 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+REST_FRAMEWORK = {
+     'DEFAULT_PAGINATION_CLASS':'rest_framework.pagination.LimitOffsetPagination',
+     'PAGE_SIZE':5,
+     'DEFAULT_AUTHENTICATION_CLASSES':[
+         'rest_framework.authentication.TokenAuthentication',
+     ],
+ }
+
+
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
