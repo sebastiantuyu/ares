@@ -63,30 +63,30 @@ def check_torre_user(username,size,lang):
 
 
 
-def search_common_interests(interest,size,lang):
+def search_common_interests(interest,size,lang,from_):
     """
         Search for people with the same interests 
         as the user
     """
     data = []
+    reqs = []
 
-    print(interest,size,lang)
-    for i in interest:
-        print(i)
-        payload = json.dumps({
-            "and":
-                [
-                {"skill/role": {"text":i,"experience":"1-plus-year"}}
-                ]
-        })
+    for e in interest:
+        reqs.append({"skill/role": {"text":e,"experience":"1-plus-year"}})
 
-        response = requests.request('POST',
-                                url_builder(size,lang,False),
-                                headers=HEADERS,
-                                data=payload)
-        
-        if response.status_code == 200:
-            for result in json.loads(response.text)['results']:
+    payload = json.dumps({
+        "and":reqs
+    })
+
+    response = requests.request('POST',
+                            url_builder(size,lang,False),
+                            headers=HEADERS,
+                            data=payload)
+    
+    if response.status_code == 200:
+        loop = 0
+        for result in json.loads(response.text)['results']:
+            if(loop >= from_):
                 langs = get_meta_data(result['username'])
                 data.append({
                             'username':result['username'],
@@ -96,9 +96,11 @@ def search_common_interests(interest,size,lang):
                             'skills':result['skills'],
                             'langs':langs
                             })
-        else:
-            print("Error:::",response.content)
-            return None
+            loop +=1
+                    
+    else:
+        print("Error:::",response.content)
+        return None
     return data
 
 

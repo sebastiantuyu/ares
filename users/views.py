@@ -118,21 +118,24 @@ class GetCoincidences(APIView):
             
             profile = Profile.objects.get(id=id_)
             search_pref = []
-            
+            size = 10
 
             for interest in profile.interests.all():
                 search_pref.append(interest.name)
 
             # By default size is 5
-            data = search_common_interests(search_pref,3,'es')
+            data = search_common_interests(search_pref,size,'es',0)
             
+
+            max_cycles_allowed = 6
             # Avoid showing users already matched !
             # only filter if user has matches
             if profile.matches.all().count() > 0:
                 for e in data:
-                        for user in profile.matches.all():
-                            if e == user:
-                                data.remove(user)
+                    for user in profile.matches.all():
+                        if e['username'].lower() == user.username.lower():
+                            data.remove(e) 
+                            break
             
             return accepted_response(json.dumps({"results":data}))
             
