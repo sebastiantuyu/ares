@@ -23,9 +23,14 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'hjck!bm!s(hthr-nyjv+#(%awuf14ndand0ak0_)t!j63fq-c#'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['http://torrenv.eba-wrqnd2pm.us-west-2.elasticbeanstalk.com/']
+
+
+CORS_ORIGIN_WHITELIST = [
+    'https://main.d6k1o9ez8ie1p.amplifyapp.com/',
+]
 
 # Application definition
 
