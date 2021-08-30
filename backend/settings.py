@@ -123,6 +123,8 @@ REST_FRAMEWORK = {
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
 
