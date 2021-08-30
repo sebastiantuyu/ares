@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'hjck!bm!s(hthr-nyjv+#(%awuf14ndand0ak0_)t!j63fq-c#'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['torre-backend-demo.herokuapp.com']
 
@@ -87,8 +87,12 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': "d44j010p617g2a",
+        'USER': "ubphvcvtwawmfh",
+        'PASSWORD': "51dcaaa6cd580d35eec16b8a75fd9b4e19c48e25219a1256824af63d23d77a64",
+        'HOST': "ec2-54-156-151-232.compute-1.amazonaws.com",
+        'PORT': "5432",
     }
 }
 
